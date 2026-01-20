@@ -10,7 +10,6 @@ class Account(BaseModel):
 
 # Input Guardrails
 def validate_user_input(ctx: RunContextWrapper[Account], agent: Agent) -> bool:
-    # Check name
     if not ctx.context.name.isalpha():
         return False
     # Check pin is 5 digits
@@ -52,17 +51,15 @@ bank_agent = Agent(
 
 fraud_agent = Agent(
     name="Fraud Detection Agent",
-    instructions="You check for suspicious activity and warn the customer if needed."
+    instructions="You check for suspicious activity and warn the customer if needed"
 )
 
 
 # Output Guardrails
 def filter_output(output: str) -> str:
-    # Prevent revealing sensitive info like PIN
     if "12345" in output:
-        return "Sensitive information cannot be displayed."
+        return "Sensitive information cannot be displayed"
     return output
-
 
 # User Context
 user_context = Account(
@@ -82,4 +79,3 @@ if validate_user_input(RunContextWrapper(user_context), bank_agent):
     print(filter_output(result.final_output))
 else:
     print("Invalid input. Please check your details and try again.")
-
